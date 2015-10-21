@@ -1,0 +1,44 @@
+BEGIN NAME:
+Oleksandr Rovner
+END NAME
+BEGIN ex1:
+G1 = [x](y|z)[x|z]z.
+yz
+zz
+xyz
+xzz
+yxz
+yzz
+zxz
+zzz
+xyxz
+xyzz
+xzxz
+xzzz
+END ex1
+BEGIN ex2:
+G2 = b{a|G2}d.
+bd
+bad
+baad
+bbdd
+baaad
+bbadd
+baaaad
+bbaadd
+bbbddd
+baaaaad
+END ex2
+BEGIN ex3
+G3 = a{bb{b}|c|[d]}a.
+aa
+aca
+ada
+abba
+acca
+adda
+abbba
+abbca
+abbda
+acbba
+END ex3
