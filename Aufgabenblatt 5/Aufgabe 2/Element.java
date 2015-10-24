@@ -10,7 +10,7 @@ public class Element {
     return priority;
   }
 
-  public Element(int priority, String data) {
+  public Element(String data, int priority) {
     this.priority = priority;
     this.data = data;
   }
