@@ -1,10 +1,21 @@
 public class Element {
-        private int priority;
-        private String data;
-        
-        public String getData() { /* ... */ }
-        public int getPriority() { /* ... */ }
+  private int priority;
+  private String data;
 
-        public Element(int priority, String data) { /* ... */ }
-        public String toString()        { /* ... */ }
+  public String getData() {
+    return data;
+  }
+
+  public int getPriority() {
+    return priority;
+  }
+
+  public Element(int priority, String data) {
+    this.priority = priority;
+    this.data = data;
+  }
+
+  public String toString() {
+    return data + " (" + priority + ")";
+  }
 }
