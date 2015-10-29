@@ -11,7 +11,6 @@ public class Genom {
   static final char[] ACIDS = {'A', 'C', 'G', 'T'};
   static Random randgen = new Random();
 
-  // TODO define members
   char[] genom;
 
   /**
@@ -50,7 +49,7 @@ public class Genom {
   }
 
   /**
-   * Translates the number 0-3 into the amio acid characters A, C, G, T.
+   * Translates the number 0-3 into the amino acid characters A, C, G, T.
    *
    * @param c Integer representing amino acid.
    * @return Character for amino acid.
@@ -79,6 +78,7 @@ public class Genom {
    */
   public void insertion() {
     int acid = ACIDS[randgen.nextInt(4)];
+    
     int index = randgen.nextInt(genom.length+1);
 
     StringBuilder strb = new StringBuilder(new String(genom));

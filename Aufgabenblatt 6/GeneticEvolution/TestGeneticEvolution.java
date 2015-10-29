@@ -15,8 +15,7 @@ public class TestGeneticEvolution {
     for(years = 0; pool.contains(species); ++years) {
       pool.mutate();
     }
-
-    return years;
+	return years;
   }
 
   /**

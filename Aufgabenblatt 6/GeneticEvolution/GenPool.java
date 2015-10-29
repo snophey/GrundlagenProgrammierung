@@ -54,12 +54,13 @@ public class GenPool {
     Random rnd = new Random();
     for(Genom g : genoms) {
       int mutation_type = rnd.nextInt(3);
-
-      switch(mutation_type) {
-        case 0: g.pointMutation(); break;
-        case 1: g.insertion(); break;
-        case 2: g.deletion(); break;
-      }
+      
+      if(mutation_type == 0)
+    	  g.pointMutation();
+      else if(mutation_type == 1 && g.toString().length() > 1)
+    	  g.deletion();
+      else
+    	  g.insertion();
     }
   }
 
