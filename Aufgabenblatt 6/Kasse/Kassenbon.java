@@ -27,10 +27,11 @@ public class Kassenbon {
     StringBuilder strb = new StringBuilder();
     strb.append("|"+repeatStr("=", WIDTH-2)+"|\n");
 
-    for(String str : addr.getData()) {
-      String line = center(str, "|"+repeatStr(" ", WIDTH-2)+"|");
-      strb.append(line+"\n");
-    }
+    strb.append(center(addr.event, "|"+repeatStr(" ", WIDTH-2)+"|\n"));
+    strb.append(center(addr.host, "|"+repeatStr(" ", WIDTH-2)+"|\n"));
+    strb.append(center(addr.street+" "+addr.nr, "|"+repeatStr(" ", WIDTH-2)+"|\n"));
+    strb.append(center(addr.postal+" "+addr.city, "|"+repeatStr(" ", WIDTH-2)+"|\n"));
+
 
     strb.append("|"+repeatStr("=", WIDTH-2)+"|\n\n");
 

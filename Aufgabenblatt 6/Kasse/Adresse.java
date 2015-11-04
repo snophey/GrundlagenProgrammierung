@@ -1,17 +1,20 @@
 import java.util.ArrayList;
 
 public class Adresse {
-  private ArrayList<String> data;
+  String event;
+  String host;
+  String street;
+  String nr;
+  String postal;
+  String city;
 
-  public Adresse(String... params) {
-    data = new ArrayList<String>();
-
-    for(String str : params) {
-      data.add(str);
-    }
-  }
-
-  public ArrayList<String> getData() {
-    return data;
+  public Adresse(String event, String host, String street,
+              String nr, String postal, String city) {
+    this.event = event;
+    this.host = host;
+    this.street = street;
+    this.nr = nr;
+    this.postal = postal;
+    this.city = city;
   }
 }
