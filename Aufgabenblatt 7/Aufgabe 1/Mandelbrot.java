@@ -10,9 +10,17 @@ public class Mandelbrot {
 
 
   public static void main(String[] args) {
+    if(args.length != 2) {
+      System.out.println("Usage: java Mandelbrot PALETTE FACTOR");
+      System.out.println("PALETTE: either 0 or 1");
+      System.out.println("FACTOR: determines screen width and height.");
+      System.out.println("e.g. if FACTOR is 5 then screen width/height will be 5*64.");
+      System.out.println("Example: java Mandelbrot 1 5");
+      return;
+    }
+
     int palette = Integer.parseInt(args[0]);
     double fact = Double.parseDouble(args[1]);
-    long startTime = 0, endTime;
     int width = (int) Math.round(64 * fact);
     int height = (int) Math.round(48 * fact);
 
