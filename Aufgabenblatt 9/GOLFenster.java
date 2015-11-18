@@ -8,9 +8,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.Timer;
+
 
 class GOLFenster extends Component {
-  static int CELL_SIZE = 20; // cell width/height in px
+  int update_interval = 1000; // time between updates in ms.
+  int cell_size = 20; // cell width/height in px
 
   static final Color DEAD_COLOR = Color.gray;
   static final Color ALIVE_COLOR = Color.green;
@@ -18,11 +23,14 @@ class GOLFenster extends Component {
 
   JFrame frame;
   GameOfLife gol;
+  Timer updater;
 
-  public GOLFenster(GameOfLife game) {
+  public GOLFenster(GameOfLife game, int interval, int size_per_cell) {
     gol = game;
-    frame = new JFrame("GOLFenster");
+    update_interval = interval;
+    cell_size = size_per_cell;
 
+    frame = new JFrame("GOLFenster");
     frame.setSize(getPreferredSize());
     frame.add(this);
     frame.pack();
@@ -34,8 +42,8 @@ class GOLFenster extends Component {
         int x = e.getX();
         int y = e.getY();
 
-        int cellx = x/CELL_SIZE;
-        int celly = y/CELL_SIZE;
+        int cellx = x/cell_size;
+        int celly = y/cell_size;
 
         gol.grid[cellx][celly] = !gol.getCellAt(cellx, celly);
 
@@ -48,6 +56,14 @@ class GOLFenster extends Component {
         System.exit(0);
       }
     });
+    // update code every update_interval milliseconds
+    updater = new Timer(update_interval, new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        gol.update();
+        redraw();
+      }
+    });
+    updater.start();
   }
 
   private void drawCell(Graphics g, int x, int y, boolean alive) {
@@ -56,7 +72,7 @@ class GOLFenster extends Component {
     else
       g.setColor(DEAD_COLOR);
 
-    g.fillRect(x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    g.fillRect(x*cell_size, y*cell_size, cell_size, cell_size);
   }
 
   private void drawGrid(Graphics g) {
@@ -64,9 +80,9 @@ class GOLFenster extends Component {
 
     for(int i = 1; i < gol.size; ++i) {
       // draw horizontal line from left to right
-      g.drawLine(0, i*CELL_SIZE, CELL_SIZE*gol.size-1, i*CELL_SIZE);
+      g.drawLine(0, i*cell_size, cell_size*gol.size-1, i*cell_size);
       // draw vertical line from top to bottom
-      g.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE, CELL_SIZE*gol.size-1);
+      g.drawLine(i*cell_size, 0, i*cell_size, cell_size*gol.size-1);
     }
   }
 
@@ -80,7 +96,7 @@ class GOLFenster extends Component {
   }
 
   public Dimension getPreferredSize() {
-    int dim = gol.size*CELL_SIZE;
+    int dim = gol.size*cell_size;
     return new Dimension(dim, dim);
   }
 
@@ -89,7 +105,17 @@ class GOLFenster extends Component {
   }
 
   static public void main(String[] args) {
-    GameOfLife game_of_life = new GameOfLife(20);
-    GOLFenster golf = new GOLFenster(game_of_life);
+    if(args.length != 3) {
+      System.out.println("Usage: java GOLFenster grid_size update_interval cell_size");
+      System.out.println("grid_size: width/height of the grid where the simulation will take place.");
+      System.out.println("update_interval: amount of time in ms between evolution steps.");
+      System.out.println("cell_size: width/height of a single cell.");
+      return;
+    }
+
+    GameOfLife game_of_life = new GameOfLife(Integer.parseInt(args[0]));
+    int interval = Integer.parseInt(args[1]);
+    int cell_size = Integer.parseInt(args[2]);
+    GOLFenster golf = new GOLFenster(game_of_life, interval, cell_size);
   }
 }
