@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
-class GOLFenster extends Component implements MouseListener {
+class GOLFenster extends Component {
   static int CELL_SIZE = 20; // cell width/height in px
 
   static final Color DEAD_COLOR = Color.gray;
@@ -25,7 +27,27 @@ class GOLFenster extends Component implements MouseListener {
     frame.add(this);
     frame.pack();
     frame.setVisible(true);
-    this.addMouseListener(this);
+
+    // reviving/killing cells by clicking on them
+    this.addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+
+        int cellx = x/CELL_SIZE;
+        int celly = y/CELL_SIZE;
+
+        gol.grid[cellx][celly] = !gol.getCellAt(cellx, celly);
+
+        redraw();
+      }
+    });
+    // this makes sure that the program exits when the user closes the window
+    frame.addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent we) {
+        System.exit(0);
+      }
+    });
   }
 
   private void drawCell(Graphics g, int x, int y, boolean alive) {
@@ -65,22 +87,6 @@ class GOLFenster extends Component implements MouseListener {
   public void redraw() {
     frame.repaint();
   }
-
-  public void mouseClicked(MouseEvent e) {
-    int x = e.getX();
-    int y = e.getY();
-
-    int cellx = x/CELL_SIZE;
-    int celly = y/CELL_SIZE;
-
-    gol.grid[cellx][celly] = !gol.getCellAt(cellx, celly);
-
-    redraw();
-  }
-  public void mouseEntered(MouseEvent e) {}
-  public void mouseExited(MouseEvent e) {}
-  public void mousePressed(MouseEvent e) {}
-  public void mouseReleased(MouseEvent e) {}
 
   static public void main(String[] args) {
     GameOfLife game_of_life = new GameOfLife(20);
