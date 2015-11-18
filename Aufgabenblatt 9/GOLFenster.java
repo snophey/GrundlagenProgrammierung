@@ -11,6 +11,8 @@ import java.awt.event.WindowListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.Timer;
+import java.awt.Button;
+import javax.swing.BoxLayout;
 
 
 class GOLFenster extends Component {
@@ -31,8 +33,34 @@ class GOLFenster extends Component {
     cell_size = size_per_cell;
 
     frame = new JFrame("GOLFenster");
-    frame.setSize(getPreferredSize());
+    frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
     frame.add(this);
+
+    Button start = new Button("Start");
+    start.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        updater.start();
+      }
+    });
+    frame.add(start);
+
+    Button pause = new Button("Pause");
+    pause.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        updater.stop();
+      }
+    });
+    frame.add(pause);
+
+    Button clear = new Button("Clear");
+    clear.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        gol.clear();
+        redraw();
+      }
+    });
+    frame.add(clear);
+
     frame.pack();
     frame.setVisible(true);
 
@@ -63,7 +91,6 @@ class GOLFenster extends Component {
         redraw();
       }
     });
-    updater.start();
   }
 
   private void drawCell(Graphics g, int x, int y, boolean alive) {

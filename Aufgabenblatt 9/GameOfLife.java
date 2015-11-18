@@ -60,6 +60,14 @@ public class GameOfLife {
     return alive;
   }
 
+  void clear() {
+    for(int x = 0; x < size; ++x) {
+      for(int y = 0; y < size; ++y) {
+        grid[x][y] = false;
+      }
+    }
+  }
+
   void update() {
     boolean copy[][] = new boolean[size][size];
 
