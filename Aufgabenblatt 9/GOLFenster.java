@@ -36,30 +36,7 @@ class GOLFenster extends Component {
     frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
     frame.add(this);
 
-    Button start = new Button("Start");
-    start.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent ae) {
-        updater.start();
-      }
-    });
-    frame.add(start);
-
-    Button pause = new Button("Pause");
-    pause.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent ae) {
-        updater.stop();
-      }
-    });
-    frame.add(pause);
-
-    Button clear = new Button("Clear");
-    clear.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent ae) {
-        gol.clear();
-        redraw();
-      }
-    });
-    frame.add(clear);
+    initButtons();
 
     frame.pack();
     frame.setVisible(true);
@@ -91,6 +68,43 @@ class GOLFenster extends Component {
         redraw();
       }
     });
+  }
+
+  private void initButtons() {
+    Button start = new Button("Start");
+    start.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        updater.start();
+      }
+    });
+    frame.add(start);
+
+    Button pause = new Button("Pause");
+    pause.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        updater.stop();
+      }
+    });
+    frame.add(pause);
+
+    Button clear = new Button("Clear");
+    clear.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        gol.clear();
+        redraw();
+      }
+    });
+    frame.add(clear);
+
+    Button randomize = new Button("Randomize");
+    randomize.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent ae) {
+        gol.clear();
+        gol.randomize();
+        redraw();
+      }
+    });
+    frame.add(randomize);
   }
 
   private void drawCell(Graphics g, int x, int y, boolean alive) {

@@ -20,7 +20,10 @@ public class GameOfLife {
   public GameOfLife(int size) {
     this.size = size;
     grid = new boolean[this.size][this.size];
+    randomize();
+  }
 
+  public void randomize() {
     Random rand = new Random();
     for(int x = 0; x < size; ++x)
       for(int y = 0; y < size; ++y)
