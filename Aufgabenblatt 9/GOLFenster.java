@@ -14,13 +14,21 @@ import javax.swing.Timer;
 import java.awt.Button;
 import javax.swing.BoxLayout;
 
+import java.awt.MenuBar;
+import java.awt.Menu;
+import java.awt.MenuItem;
+
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JColorChooser;
+
 
 class GOLFenster extends Component {
   int update_interval = 1000; // time between updates in ms.
   int cell_size = 20; // cell width/height in px
 
-  static final Color DEAD_COLOR = Color.gray;
-  static final Color ALIVE_COLOR = Color.green;
+  Color DEAD_COLOR = Color.gray;
+  Color ALIVE_COLOR = Color.green;
   static final Color GRID_COLOR = Color.black;
 
   JFrame frame;
@@ -36,6 +44,7 @@ class GOLFenster extends Component {
     frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
     frame.add(this);
 
+    initMenu();
     initButtons();
 
     frame.pack();
@@ -70,6 +79,91 @@ class GOLFenster extends Component {
     });
   }
 
+  private void initMenu() {
+    MenuBar mbar = new MenuBar();
+    frame.setMenuBar(mbar);
+
+    Menu file = new Menu("File");
+      MenuItem save = new MenuItem("Save to filesystem...");
+      MenuItem load = new MenuItem("Load from filesystem...");
+      file.add(save);
+      file.add(load);
+      file.addSeparator();
+      MenuItem quit = new MenuItem("Quit");
+      quit.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          System.exit(0);
+        }
+      });
+      file.add(quit);
+
+    Menu edit = new Menu("Edit");
+      MenuItem randomize = new MenuItem("Randomize grid");
+      MenuItem change_dead = new MenuItem("Recolor dead cells...");
+      MenuItem change_alive = new MenuItem("Recolor living cells...");
+      MenuItem change_interval = new MenuItem("Set update interval...");
+      edit.add(randomize);
+      edit.addSeparator();
+      edit.add(change_alive);
+      edit.add(change_dead);
+      edit.addSeparator();
+      edit.add(change_interval);
+      randomize.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          gol.clear();
+          gol.randomize();
+          redraw();
+        }
+      });
+      // this creates a new color picker dialog where the user can choose a
+      // new color for the living cells
+      change_alive.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          JColorChooser chooser = new JColorChooser(ALIVE_COLOR);
+          JDialog col = JColorChooser.createDialog(frame, "Pick the new color", false, chooser,
+          new ActionListener() { // if ok is pressed
+            public void actionPerformed(ActionEvent e) {
+              ALIVE_COLOR = chooser.getColor();
+              redraw();
+            }
+          },
+          new ActionListener() { // if cancel is pressed
+            public void actionPerformed(ActionEvent e) {} // ...do nothing
+          });
+          col.setVisible(true);
+        }
+      });
+      change_dead.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          JColorChooser chooser = new JColorChooser(DEAD_COLOR);
+          JDialog col = JColorChooser.createDialog(frame, "Pick the new color", false, chooser,
+          new ActionListener() { // if ok is pressed
+            public void actionPerformed(ActionEvent e) {
+              DEAD_COLOR = chooser.getColor();
+              redraw();
+            }
+          },
+          new ActionListener() { // if cancel is pressed
+            public void actionPerformed(ActionEvent e) {} // ...do nothing
+          });
+          col.setVisible(true);
+        }
+      });
+
+    Menu help = new Menu("Help");
+      MenuItem about = new MenuItem("About");
+      help.add(about);
+      about.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          JOptionPane.showMessageDialog(frame, "GOLFenster\nAdvanced visualization software for Conway's Game of Life\nCopyright (c) 2015 GETALIFE Ltd.");
+        }
+      });
+
+    mbar.add(file);
+    mbar.add(edit);
+    mbar.add(help);
+  }
+
   private void initButtons() {
     Button start = new Button("Start");
     start.addActionListener(new ActionListener() {
@@ -95,16 +189,6 @@ class GOLFenster extends Component {
       }
     });
     frame.add(clear);
-
-    Button randomize = new Button("Randomize");
-    randomize.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent ae) {
-        gol.clear();
-        gol.randomize();
-        redraw();
-      }
-    });
-    frame.add(randomize);
   }
 
   private void drawCell(Graphics g, int x, int y, boolean alive) {
