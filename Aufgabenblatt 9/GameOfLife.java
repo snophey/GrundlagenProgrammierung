@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.Arrays;
+import java.io.BufferedReader;
 
 public class GameOfLife {
   int size;
@@ -15,6 +16,30 @@ public class GameOfLife {
       {false,false,false,false,false,false},
       {false,false,false,false,false,false}
     };
+  }
+
+  public GameOfLife(BufferedReader input) throws Exception {
+    String line;
+    size = Integer.parseInt(input.readLine().trim());
+    grid = new boolean[size][size];
+
+    for(int y = 0; y < size; ++y) {
+      line = input.readLine();
+
+      if(line == null || line.length() != size)
+        throw new Exception("Invalid cell data");
+
+      line = line.trim();
+
+      for(int x = 0; x < size; ++x) {
+        if(line.charAt(x) == '.')
+          grid[y][x] = false;
+        else if(line.charAt(x) == '@')
+          grid[y][x] = true;
+        else
+          throw new Exception("Invalid cell data");
+      }
+    }
   }
 
   public GameOfLife(int size) {
@@ -91,12 +116,13 @@ public class GameOfLife {
 
   public String toString() {
     StringBuilder strb = new StringBuilder();
+    strb.append(size+"\n");
     for(int x = 0; x < size; ++x) {
       for(int y = 0; y < size; ++y) {
         strb.append(getCellAt(x,y)? '@' : '.');
       }
       strb.append("\n");
     }
-    return strb.toString();
+    return strb.toString().trim();
   }
 }

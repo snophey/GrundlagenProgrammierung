@@ -21,6 +21,10 @@ import java.awt.MenuItem;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
+import java.io.PrintWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 
 class GOLFenster extends Component {
@@ -96,6 +100,38 @@ class GOLFenster extends Component {
         }
       });
       file.add(quit);
+      save.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          JFileChooser chooser = new JFileChooser();
+          int status = chooser.showSaveDialog(frame);
+          if(status == JFileChooser.APPROVE_OPTION) {
+            String savepath = chooser.getSelectedFile().getPath();
+            try {
+              PrintWriter w = new PrintWriter(savepath, "ASCII");
+              w.write(gol.toString());
+              w.close();
+            } catch(Exception ex) {
+              JOptionPane.showMessageDialog(frame, "An error occured while trying to save the grid.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+          }
+        }
+      });
+      load.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          JFileChooser chooser = new JFileChooser();
+          int status = chooser.showOpenDialog(frame);
+          if(status == JFileChooser.APPROVE_OPTION) {
+            String path = chooser.getSelectedFile().getPath();
+            try {
+              BufferedReader reader = new BufferedReader(new FileReader(path));
+              gol = new GameOfLife(reader);
+              redraw();
+            } catch(Exception ex) {
+              JOptionPane.showMessageDialog(frame, "An error occured while trying to load the grid.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+          }
+        }
+      });
 
     Menu edit = new Menu("Edit");
       MenuItem randomize = new MenuItem("Randomize grid");
@@ -147,6 +183,13 @@ class GOLFenster extends Component {
             public void actionPerformed(ActionEvent e) {} // ...do nothing
           });
           col.setVisible(true);
+        }
+      });
+      change_interval.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          String str_interval = JOptionPane.showInputDialog(frame, "Amount of milliseconds between generations:\n(1000ms = 1s)");
+          update_interval = Math.abs(Integer.parseInt(str_interval));
+          updater.setDelay(update_interval);
         }
       });
 
