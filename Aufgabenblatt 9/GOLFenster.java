@@ -26,6 +26,9 @@ import java.io.PrintWriter;
 import java.io.FileReader;
 import java.io.BufferedReader;
 
+import java.awt.Desktop;
+import java.net.URI;
+
 
 class GOLFenster extends Component {
   int update_interval = 1000; // time between updates in ms.
@@ -33,11 +36,12 @@ class GOLFenster extends Component {
 
   Color DEAD_COLOR = Color.gray;
   Color ALIVE_COLOR = Color.green;
-  static final Color GRID_COLOR = Color.black;
+  static final Color GRID_COLOR = Color.lightGray;
 
   JFrame frame;
   GameOfLife gol;
   Timer updater;
+  boolean draw_grid = true;
 
   public GOLFenster(GameOfLife game, int interval, int size_per_cell) {
     gol = game;
@@ -125,6 +129,7 @@ class GOLFenster extends Component {
             try {
               BufferedReader reader = new BufferedReader(new FileReader(path));
               gol = new GameOfLife(reader);
+              frame.pack();
               redraw();
             } catch(Exception ex) {
               JOptionPane.showMessageDialog(frame, "An error occured while trying to load the grid.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -193,17 +198,38 @@ class GOLFenster extends Component {
         }
       });
 
+    Menu view = new Menu("View");
+      MenuItem toggle_grid = new MenuItem("Toggle grid");
+      view.add(toggle_grid);
+      toggle_grid.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          draw_grid = !draw_grid;
+          redraw();
+        }
+      });
+
     Menu help = new Menu("Help");
       MenuItem about = new MenuItem("About");
-      help.add(about);
       about.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
           JOptionPane.showMessageDialog(frame, "GOLFenster\nAdvanced visualization software for Conway's Game of Life\nCopyright (c) 2015 GETALIFE Ltd.");
         }
       });
+      MenuItem whatis = new MenuItem("What is Conway's Game Of Life?");
+      help.add(whatis);
+      whatis.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+          if(Desktop.isDesktopSupported())
+            try {
+              Desktop.getDesktop().browse(new URI("https://en.wikipedia.org/wiki/Conway\'s_Game_of_Life"));
+            } catch(Exception ex) {}
+        }
+      });
+      help.add(about);
 
     mbar.add(file);
     mbar.add(edit);
+    mbar.add(view);
     mbar.add(help);
   }
 
@@ -244,6 +270,9 @@ class GOLFenster extends Component {
   }
 
   private void drawGrid(Graphics g) {
+    if(!draw_grid)
+      return;
+
     g.setColor(GRID_COLOR);
 
     for(int i = 1; i < gol.size; ++i) {
